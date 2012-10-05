@@ -1,6 +1,7 @@
 package iochan
 
 import (
+	"bufio"
 	"bytes"
 	"io"
 	"os"
@@ -62,4 +63,12 @@ func (b Buffer) FileLineChan(fpath string) (cr <-chan string) {
 		cr = c
 	}
 	return
+}
+
+func BytesLineChan(data []byte) (cr <-chan string) {
+	return make(Buffer, 2048).BytesLineChan(data)
+}
+
+func (b Buffer) BytesLineChan(data []byte) (cr <-chan string) {
+	return b.ReaderChan(bufio.NewReader(bytes.NewBuffer(data)), "\n")
 }
